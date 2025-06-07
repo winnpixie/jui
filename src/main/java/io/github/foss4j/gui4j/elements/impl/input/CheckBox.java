@@ -1,0 +1,57 @@
+package io.github.foss4j.gui4j.elements.impl.input;
+
+import io.github.foss4j.gui4j.elements.Element;
+import io.github.foss4j.gui4j.elements.handlers.ElementEventListener;
+import io.github.foss4j.gui4j.elements.styling.ElementStyle;
+import io.github.foss4j.gui4j.elements.styling.text.TextAlignment;
+import io.github.foss4j.gui4j.elements.styling.text.TextPosition;
+
+public class CheckBox extends Element {
+    private boolean checked;
+
+    public final Button checkButton;
+
+    public ElementStyle checkedStyle = new ElementStyle(null);
+    public ElementStyle uncheckedStyle = new ElementStyle(null);
+
+    public CheckBox(String text, float x, float y, float width, float height, boolean initialState) {
+        super(x, y, width, height);
+
+        setText(text);
+        this.checked = initialState;
+
+        float size = 8f;
+        checkButton = new Button(null, getWidth() - size - (size / 4f), getHeight() / 2f - (size / 2f), size, size);
+        checkButton.addListener(new ElementEventListener() {
+            @Override
+            public void onLeftClick(int mouseX, int mouseY) {
+                setChecked(!checked);
+
+                onValueChanged(!checked, checked);
+            }
+        });
+
+        getNormalStyle().textStyle.setAlignment(TextAlignment.LEFT);
+        getNormalStyle().textStyle.setPosition(TextPosition.MIDDLE);
+        updateVisuals();
+
+        addChild(checkButton);
+    }
+
+    public boolean isChecked() {
+        return checked;
+    }
+
+    public void setChecked(boolean checked) {
+        this.checked = checked;
+
+        updateVisuals();
+    }
+
+    public void onValueChanged(boolean oldValue, boolean newValue) {
+    }
+
+    private void updateVisuals() {
+        checkButton.setNormalStyle(checked ? checkedStyle : uncheckedStyle);
+    }
+}
